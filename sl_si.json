@@ -1,0 +1,14 @@
+{
+    "arguments": {
+        "missing": "Hmm, ta ukaz potrebuje dodatne argumente ...",
+        "invalid": "Uh, tole pa ne bo šlo. Ne prepoznam dela: "
+    },
+    "competition": {
+        "notFound": "Tekme ni bilo mogoče najti",
+        "thisYear": "Tekme letošnjega leta: ",
+        "noMore": "Za to leto je tekem konec."
+    },
+    "error": {
+        "failedRequest": "Podatkov ni bilo mogoče pridobiti."
+    }
+}

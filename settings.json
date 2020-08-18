@@ -1,0 +1,10 @@
+{
+    "lang": "sl_si.json",
+    "command": {
+        "start": "!tekma"
+    },
+    "activity": {
+        "name": "Climbing 8a+"
+    },
+    "token": null
+}

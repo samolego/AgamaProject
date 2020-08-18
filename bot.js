@@ -55,12 +55,12 @@ bot.on('message', msg => {
                     let competitions = $('select#izbTekme option').toArray();
 
                     // Removing old competitions
+                    const date = new Date();
                     for(let i = 0; i < competitions.length; i++) {
-                        let date = new Date().getFullYear();
                         let competition = $(competitions[i]).text();
                         competition = competition.split(".");
                         
-                        if(!competition[2].startsWith(date)) {
+                        if(!competition[2].startsWith(date.getFullYear())) {
                             competitions.splice(i, competitions.length - i);
                             break;
                         }
@@ -68,14 +68,31 @@ bot.on('message', msg => {
                     competitions.reverse();
 
                     if(number == null) {
-                        msg.channel.send(language.competition.thisYear);
+                        msg.channel.send(new Discord.MessageEmbed().setTitle(language.competition.thisYear).setColor('#0099ff'));
                         for(let i = 0; i < competitions.length; i++) {
                             msg.channel.send($(competitions[i]).text());
                         }
-                        return;
                     }
-                    else if(number == "naslednja")
-                        msg.channel.send($(competitions[0]).text());
+                    else if(number == "naslednja") {
+                        var message;
+                        for(let i = 1; i < competitions.length; i++) {
+                            let competition = $(competitions[i]).text();
+                            competition = competition.split(",");
+                            
+                            // Creating date of competition from string
+                            let competitionDate = new Date(competition[0].split(".").reverse().join("-"));
+                            
+                            // Checking whether this match has not been organised yet
+                            if(competitionDate >= date) {
+                                message = $(competitions[i]).text();
+                                break;
+                            }
+                        }
+                        // If message is null, it means that there are no more competitions this year
+                        if(!message)
+                            message = language.competition.noMore;
+                        msg.channel.send(message)
+                    }
                     else
                         msg.channel.send($(competitions[number - 1]).text());
                 });

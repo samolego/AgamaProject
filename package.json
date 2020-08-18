@@ -1,25 +1,27 @@
 {
-
-  "name": "agama-project",
-
-  "description": "A bot for climbing competitions",
-
+  "name": "agamaproject",
   "version": "1.0.0",
-
+  "description": "A bot for climbing competitions",
   "main": "bot.js",
-
-  "scripts": {
-
-    "start": "node bot.js"
-
-  },
-
   "dependencies": {
-
-    "discord.js": "11.1.0",
-
-    "request": "2.81.0"
-
-  }
-
+    "cheerio": "^1.0.0-rc.3",
+    "discord.js": "^12.3.1",
+    "himalaya": "^1.1.0",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samolego/AgamaProject.git"
+  },
+  "author": "samo_lego",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/samolego/AgamaProject/issues"
+  },
+  "homepage": "https://github.com/samolego/AgamaProject#readme"
 }
