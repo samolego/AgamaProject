@@ -209,6 +209,6 @@ async function commandParser(msg, args, competitionList) {
  * @param {integer} index 
  */
 function getDateAndLocationMessage(competitionList, index) {
-    let dateFormat = new Intl.DateTimeFormat("de-DE").format(competitionList[index].date);
-    return dateFormat.split("-").reverse().join(".") + ", " + competitionList[index].location;
+    let dateFormat = competitionList[index].date.toLocaleDateString('en-US', { year: "numeric", month: "short", day: "numeric" });
+    return dateFormat + ", " + competitionList[index].location;
 }
