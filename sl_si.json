@@ -5,7 +5,9 @@
     },
     "competition": {
         "notFound": "Tekme ni bilo mogoče najti",
-        "thisYear": "Tekme letošnjega leta: ",
+        "thisYear": "Tekme letošnjega leta",
+        "next": "Naslednja tekma",
+        "timeUntillNext": "Do tekme je še ${days} dni",
         "noMore": "Za to leto je tekem konec."
     },
     "error": {
