@@ -170,8 +170,6 @@ async function commandParser(msg, args, competitionList) {
     }
     else if(number == "naslednja" || number == 0) {
         var message;
-        date.setDate(-140);
-        console.log(date);
         for(var i = 0; i < competitionList.length; i++) {            
             // Checking whether this match has not been organised yet
             if(competitionList[i].date >= date) {
