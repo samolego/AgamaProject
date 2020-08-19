@@ -47,7 +47,7 @@ bot.on('ready', () => {
         status: 'online',
         activity: {
             name: settings.activity.name,
-            type: 'PLAYING'
+            type: 'WATCHING'
         }
     })
 });
