@@ -71,6 +71,7 @@ bot.on('message', msg => {
                     commandParser(msg, args, competitionsDP.list);
                     return;
                 }
+                competitionsDP.list = [];
                 request({
                     method: 'GET',
                     // Luckily KŠP has an API :)
@@ -97,8 +98,8 @@ bot.on('message', msg => {
                             competitions[i].Klub,
                             competitions[i].TipNaziv
                         ));
-                        // Expiration after 1 day
-                        competitionsDP.expiresAt = new Date().setDate(date.getDate() + 1);
+                        // Expiration after half a day
+                        competitionsDP.expiresAt = new Date().setDate(date.getDate() + 0.5);
                     }
                     competitionsDP.list.reverse();
                     commandParser(msg, args, competitionsDP.list);
@@ -110,6 +111,7 @@ bot.on('message', msg => {
                     commandParser(msg, args, competitionsVL.list);
                     return;
                 }
+                competitionsVL.list = [];
                 request({
                     method: 'GET',
                     url: "https://climbers.si/index.asp?Page=ArhivVzhodneLige_Tekme"
@@ -139,8 +141,8 @@ bot.on('message', msg => {
                             competitionDate,
                             competition[1].replace(" ", "")
                         ));
-                        // Expiration after 1 day
-                        competitionsVL.expiresAt = new Date().setDate(date.getDate() + 1);
+                        // Expiration after half day
+                        competitionsVL.expiresAt = new Date().setDate(date.getDate() + 0.5);
                     }
                     competitionsVL.list.reverse();
                     commandParser(msg, args, competitionsVL.list)
