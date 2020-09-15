@@ -42,7 +42,7 @@ var competitionsVL = {
 };
 
 bot.on('ready', () => {
-    console.log('Booted up!');
+    console.log("Beep boop. I've booted up");
     bot.user.setPresence({
         status: 'online',
         activity: {
@@ -54,7 +54,10 @@ bot.on('ready', () => {
 
  
 bot.on('message', msg => {
-    if (msg.content.startsWith(settings.command.start)) {
+    if(msg.mentions.has(bot.user)) {
+        msg.channel.send(language.botInfo);
+    }
+    else if (msg.content.startsWith(settings.command.start)) {
         // Bot command was used
         const args = msg.content.split(" ");
         args.shift(); // removing first part of the command
@@ -86,7 +89,7 @@ bot.on('message', msg => {
 
                     // Removing old competitions
                     for(let i = 0; i < competitions.length; i++) {
-                        if(competitions[i].Sezona < date.getFullYear()) {
+                        if(competitions[i].Sezona < date.getFullYear() - 1) {
                             competitions.splice(i, competitions.length - i);
                             break;
                         }
@@ -145,11 +148,11 @@ bot.on('message', msg => {
                         competitionsVL.expiresAt = new Date().setDate(date.getDate() + 0.5);
                     }
                     competitionsVL.list.reverse();
-                    commandParser(msg, args, competitionsVL.list)
+                    commandParser(msg, args, competitionsVL.list);
                 });
                 break;
             default:
-                msg.channel.send(language.arguments.invalid.concat(args[0]))
+                msg.channel.send(language.arguments.invalid.replace("{arg}", args[0]));
                 break;
         }
     }

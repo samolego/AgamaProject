@@ -1,7 +1,7 @@
 {
     "arguments": {
-        "missing": "Hmm, ta ukaz potrebuje dodatne argumente ...",
-        "invalid": "Uh, tole pa ne bo šlo. Ne prepoznam dela: "
+        "missing": "Hmm, ta ukaz potrebuje dodatne argumente - `vl` ali `dp`.",
+        "invalid": "Uh, tole pa ne bo šlo. Na žalost `{arg}` ni veljaven argument."
     },
     "competition": {
         "notFound": "Tekme ni bilo mogoče najti",
@@ -12,5 +12,6 @@
     },
     "error": {
         "failedRequest": "Podatkov ni bilo mogoče pridobiti."
-    }
+    },
+    "botInfo": "Živjo, sem Agama! Sem bot za pregled tekem Vzhodne lige in Državnega prvenstva.\nZa pregled mi napiši ukaz `!tekma`"
 }
