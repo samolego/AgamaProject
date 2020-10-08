@@ -89,7 +89,7 @@ bot.on('message', msg => {
 
                     // Removing old competitions
                     for(let i = 0; i < competitions.length; i++) {
-                        if(competitions[i].Sezona < date.getFullYear() - 1) {
+                        if(competitions[i].Sezona < date.getFullYear()) {
                             competitions.splice(i, competitions.length - i);
                             break;
                         }
