@@ -1,23 +1,30 @@
-use std::any::Any;
-use std::env;
+mod vlscrapper;
 
-use serenity::{
-    async_trait,
-    model::{
-        gateway::Ready,
-        id::GuildId,
-        interactions::{
-            application_command::{
-                ApplicationCommand,
-                ApplicationCommandInteractionDataOptionValue,
-                ApplicationCommandOptionType,
-            },
-            Interaction,
-            InteractionResponseType,
+use std::env;
+use std::ptr::null;
+
+use chrono::{Date, DateTime, Local, TimeZone, Utc};
+use select::node::Data;
+use serenity::{async_trait, FutureExt, model::{
+    gateway::Ready,
+    id::GuildId,
+    interactions::{
+        application_command::{
+            ApplicationCommand,
+            ApplicationCommandInteractionDataOptionValue,
+            ApplicationCommandOptionType,
         },
+        Interaction,
+        InteractionResponseType,
     },
-    prelude::*,
-};
+}, prelude::*};
+
+struct Tekma {
+    date: Date<Local>,
+    location: String,
+    organizer: String,
+    league: String,
+}
 
 struct AgamaEvtHandler;
 
@@ -50,13 +57,94 @@ impl EventHandler for AgamaEvtHandler {
                         .data
                         .options
                         .get(0)
-                        .expect("Hmm, pričakovala sem ligo tekme.")
+                        .expect("Hmm, pričakovala sem ligo TEKME.")
                         .resolved
                         .as_ref()
-                        .expect("Liga tekme pričakovana ...");
+                        .expect("Liga TEKME pričakovana ...");
 
-                    if let ApplicationCommandInteractionDataOptionValue::String(league) = options {
-                        format!("{}", league)
+                    if let ApplicationCommandInteractionDataOptionValue::String(liga) =
+                    options {
+                        match liga.as_str() {
+                            // Vzhodna liga
+                            "vl" => unsafe {
+                                let options = command
+                                    .data
+                                    .options
+                                    .get(1);
+
+                                let number: i32= match options {
+                                    Some(option) => {
+                                        if let ApplicationCommandInteractionDataOptionValue::Integer(podana) =
+                                        option.resolved.as_ref().unwrap() {
+                                            *podana as i32
+                                        } else {
+                                            -1 as i32
+                                        }
+                                    },
+                                    None => -1 as i32
+                                };
+
+                                // Dejanski index tekme (programerski)
+                                let dejanska_tekma: usize = (number - 1) as usize;
+                                if dejanska_tekma < TEKME_VL.len() {
+                                    // Pridobi tekmo na dejanskem indexu
+                                    TEKME_VL.get(dejanska_tekma).map(|tekma| {
+                                        format!(
+                                            "Tekma {}.: {} ({})",
+                                            number,
+                                            tekma.location,
+                                            tekma.date.format("%d. %m. %Y")
+                                        )
+                                    }).unwrap_or_else(|| "Tekma ne obstaja".to_string())
+                                } else if number == 0 {
+                                    // Print naslednje tekme
+                                    // Pridobi današnji datum
+                                    let now: Date<Local> = Local::today();
+                                    let mut naslednja = None;
+
+                                    for tekma in &TEKME_VL {
+                                        if tekma.date > now {
+                                            naslednja = Some(tekma);
+                                            "Naslednja tekma: ".to_string();
+                                            break;
+                                        }
+                                    }
+
+                                    if naslednja.is_some() {
+                                        let tekma = naslednja.unwrap();
+                                        format!(
+                                            "Naslednja tekma: {} ({})",
+                                            tekma.location,
+                                            tekma.date.format("%d. %m. %Y")
+                                        )
+                                    } else {
+                                        "Tekem je za to sezono konec.".to_string()
+                                    }
+                                } else if number < 0 {
+                                    // Vse tekme
+                                    let mut tekme = String::new();
+                                    for (index, tekma) in TEKME_VL.iter().enumerate() {
+                                        tekme.push_str(&format!(
+                                            "{}. {} ({})\n",
+                                            index + 1,
+                                            tekma.location,
+                                            tekma.date.format("%d. %m. %Y")
+                                        ));
+                                    }
+                                    tekme
+                                } else {
+                                    "Tekma ne obstaja.".to_string()
+                                }
+                            },
+
+                            // Drzavno prvenstvo
+                            "dp" => {
+                                "Tekma ne obstaja".to_string()
+                            },
+                            _ => {
+                                "Liga ne obstaja".to_string()
+                            }
+                        }
                     } else {
                         "Please provide a valid league".to_string()
                     }
@@ -87,7 +175,7 @@ impl EventHandler for AgamaEvtHandler {
                 .expect("GUILD_ID must be an integer"),
         );
 
-        let commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
+        let _commands = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
             commands
                 .create_application_command(|command| {
                     command.name("tekma").description("Pregled tekem plezanja")
@@ -102,8 +190,8 @@ impl EventHandler for AgamaEvtHandler {
                         })
                         .create_option(|option| {
                             option
-                                .name("številka tekme")
-                                .description("Številka tekme.")
+                                .name("stevilka")
+                                .description("Številka tekme..")
                                 .kind(ApplicationCommandOptionType::Integer)
                                 .min_int_value(0)
                         })
@@ -175,20 +263,25 @@ impl EventHandler for AgamaEvtHandler {
         })
             .await;
 
-        println!("I now have the following guild slash commands: {:#?}", commands);
+        //println!("I now have the following guild slash commands: {:#?}", commands);
 
-        let guild_command =
-            ApplicationCommand::create_global_application_command(&ctx.http, |command| {
-                command.name("wonderful_command").description("An amazing command")
-            })
-                .await;
+        let _global = ApplicationCommand::create_global_application_command(&ctx.http, |command| {
+            command.name("wonderful_command").description("An amazing command")
+        })
+            .await;
 
-        println!("I created the following global slash command: {:#?}", guild_command);
+        //println!("I created the following global slash command: {:#?}", guild_command);
     }
 }
 
+static mut TEKME_VL: Vec<Tekma> = Vec::new();
+
 #[tokio::main]
 async fn main() {
+    unsafe {
+        TEKME_VL = vlscrapper::pridobi_vl_tekme().await;
+    }
+
     // Configure the client with your Discord bot token in the environment.
     let token = env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
 
@@ -212,4 +305,5 @@ async fn main() {
     if let Err(why) = client.start().await {
         println!("Client error: {:?}", why);
     }
+
 }

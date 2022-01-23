@@ -7,5 +7,15 @@ edition = "2018"
 [dependencies]
 tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
 
+# Discord API
 serenity = { default-features = false,  features = ["client", "gateway", "rustls_backend", "model", "unstable_discord_api"], version = "0.10.10" }
 
+# Time & date
+chrono = "0.4.19"
+
+# Webscraper
+reqwest =  { version = "0.11.9", features = ["blocking"] }
+select = "0.6.0-alpha.1"
+scraper = "0.12.0"
+openssl = "0.10.38"
+regex = "1.5.4"
