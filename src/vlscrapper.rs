@@ -1,7 +1,8 @@
-use scraper::{Html, Selector};
 use chrono::{Date, Local, NaiveDate, TimeZone};
 use regex::Regex;
-use crate::{Tekma, TEKME_VL};
+use scraper::{Html, Selector};
+
+use crate::Tekma;
 
 pub(crate) async fn pridobi_vl_tekme() -> Vec<Tekma> {
     let mut tekme: Vec<Tekma> = Vec::new();

@@ -1,5 +1,3 @@
-mod vlscrapper;
-
 use std::env;
 use std::ptr::null;
 
@@ -18,6 +16,8 @@ use serenity::{async_trait, FutureExt, model::{
         InteractionResponseType,
     },
 }, prelude::*};
+
+mod vlscrapper;
 
 struct Tekma {
     date: Date<Local>,
@@ -260,17 +260,13 @@ impl EventHandler for AgamaEvtHandler {
                                 .required(true)
                         })
                 })
-        })
-            .await;
+        }).await;
 
-        //println!("I now have the following guild slash commands: {:#?}", commands);
 
         let _global = ApplicationCommand::create_global_application_command(&ctx.http, |command| {
             command.name("wonderful_command").description("An amazing command")
-        })
-            .await;
+        }).await;
 
-        //println!("I created the following global slash command: {:#?}", guild_command);
     }
 }
 
